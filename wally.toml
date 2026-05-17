@@ -1,0 +1,10 @@
+[package]
+name = "HoshinaDev/server-ragdoll"
+description = "Server-side R6/R15 ragdoll module for Roblox projects."
+version = "0.1.0"
+license = "MIT"
+authors = ["HoshinaDev"]
+realm = "server"
+registry = "https://github.com/UpliftGames/wally-index"
+
+[dependencies]
