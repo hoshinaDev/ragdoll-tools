@@ -206,6 +206,31 @@ local function prepareCollision(record: RagdollRecord)
 	end
 end
 
+local function buildSelfNoCollisionConstraints(record: RagdollRecord, folder: Folder)
+	local parts: { BasePart } = {}
+
+	for _, descendant in record.character:GetDescendants() do
+		if descendant:IsA("BasePart") then
+			table.insert(parts, descendant)
+		end
+	end
+
+	for index = 1, #parts do
+		local part0 = parts[index]
+
+		for otherIndex = index + 1, #parts do
+			local part1 = parts[otherIndex]
+
+			local noCollision = Instance.new("NoCollisionConstraint")
+			noCollision.Name = NO_COLLIDE_PREFIX .. part0.Name .. "_" .. part1.Name
+			noCollision.Part0 = part0
+			noCollision.Part1 = part1
+			noCollision.Parent = folder
+			table.insert(record.instances, noCollision)
+		end
+	end
+end
+
 local function buildConstraints(record: RagdollRecord, folder: Folder)
 	for _, motor in record.motors do
 		local part0 = motor.Part0
@@ -222,13 +247,6 @@ local function buildConstraints(record: RagdollRecord, folder: Folder)
 			socket.Parent = folder
 			configureSocket(socket, motor.Name)
 			table.insert(record.instances, socket)
-
-			local noCollision = Instance.new("NoCollisionConstraint")
-			noCollision.Name = NO_COLLIDE_PREFIX .. motor.Name
-			noCollision.Part0 = part0
-			noCollision.Part1 = part1
-			noCollision.Parent = folder
-			table.insert(record.instances, noCollision)
 
 			table.insert(record.instances, attachment0)
 			table.insert(record.instances, attachment1)
@@ -366,6 +384,7 @@ function Ragdoll.Ragdoll(character: Model, options: RagdollOptions?): boolean
 	prepareHumanoid(record)
 	prepareCollision(record)
 	buildConstraints(record, folder)
+	buildSelfNoCollisionConstraints(record, folder)
 
 	local duration = mergedOptions.Duration
 	if duration and duration > 0 then
