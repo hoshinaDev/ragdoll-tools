@@ -1,15 +1,6 @@
 {
-  "name": "server-ragdoll-module",
+  "name": "ragdoll-tools",
   "tree": {
-    "$className": "DataModel",
-    "ServerScriptService": {
-      "$className": "ServerScriptService",
-      "Ragdoll": {
-        "$path": "src/ServerScriptService/Ragdoll"
-      },
-      "RagdollExample.server": {
-        "$path": "src/ServerScriptService/RagdollExample.server.lua"
-      }
-    }
+    "$path": "src/ServerScriptService/Ragdoll"
   }
 }
