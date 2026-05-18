@@ -2,6 +2,8 @@
 
 local Ragdoll = {}
 
+local Players = game:GetService("Players")
+
 export type RagdollOptions = {
 	Duration: number?,
 	CollideLimbs: boolean?,
@@ -423,10 +425,21 @@ function Ragdoll.BindDeath(character: Model, options: RagdollOptions?): RBXScrip
 	assert(typeof(character) == "Instance" and character:IsA("Model"), "Ragdoll.BindDeath expected a character Model")
 
 	local humanoid = getHumanoid(character)
+	local player = Players:GetPlayerFromCharacter(character)
 	humanoid.BreakJointsOnDeath = false
 
 	return humanoid.Died:Connect(function()
-		Ragdoll.Ragdoll(character, options)
+		local deathOptions = mergeOptions(options)
+		deathOptions.Duration = nil
+		Ragdoll.Ragdoll(character, deathOptions)
+
+		if player then
+			task.delay(Players.RespawnTime, function()
+				if player.Character == character then
+					player:LoadCharacter()
+				end
+			end)
+		end
 	end)
 end
 
