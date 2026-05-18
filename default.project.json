@@ -1,6 +1,6 @@
 {
   "name": "ragdoll-tools",
   "tree": {
-    "$path": "src/ServerScriptService/Ragdoll"
+    "$path": "src"
   }
 }
